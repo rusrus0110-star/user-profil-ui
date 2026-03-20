@@ -20,10 +20,11 @@ import {
   Checkbox,
   Select,
   MenuItem,
-  InputLabel,
   Paper,
   Badge,
 } from "@mui/material";
+
+const FONT_SIZE = 12;
 
 const roles = [
   { value: "developer", label: "💻 Developer" },
@@ -36,7 +37,7 @@ const ProfilePlayground = () => {
   const [profileSettings, setProfileSettings] = useState({
     name: "Anna",
     surname: "Petrova",
-    avatarSize: 42,
+    avatarSize: 45,
     buttonColor: "primary",
     buttonSize: "medium",
     isOnline: false,
@@ -61,11 +62,9 @@ const ProfilePlayground = () => {
   const getRole = () =>
     roles.find((r) => r.value === profileSettings.occupation)?.label;
 
-  // 📸 upload image
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const url = URL.createObjectURL(file);
     update("avatarUrl", url);
   };
@@ -77,13 +76,13 @@ const ProfilePlayground = () => {
           {/* LEFT */}
           <Paper sx={{ flex: "0 0 40%", p: 3 }}>
             <Typography
-              variant="h6"
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
                 mb: 2,
                 pl: "calc((100% - 300px) / 2)",
+                fontSize: 14,
               }}
             >
               👤 Profile Card
@@ -107,7 +106,7 @@ const ProfilePlayground = () => {
                 >
                   {/* HEADER */}
                   <Box sx={{ display: "flex", gap: 2 }}>
-                    {/* LEFT: Avatar + Upload */}
+                    {/* Avatar + Upload */}
                     <Box
                       sx={{
                         display: "flex",
@@ -123,17 +122,17 @@ const ProfilePlayground = () => {
                           horizontal: "right",
                         }}
                         badgeContent={
-                          profileSettings.isOnline ? (
+                          profileSettings.isOnline && (
                             <Box
                               sx={{
-                                width: 10,
-                                height: 10,
+                                width: 8,
+                                height: 8,
                                 borderRadius: "50%",
                                 bgcolor: "success.main",
                                 border: "2px solid white",
                               }}
                             />
-                          ) : null
+                          )
                         }
                       >
                         <Avatar
@@ -149,17 +148,15 @@ const ProfilePlayground = () => {
                         </Avatar>
                       </Badge>
 
-                      {/* Upload strictly under the avatar */}
                       <Button
                         variant="text"
                         component="label"
                         size="small"
                         sx={{
-                          fontSize: "10px",
+                          fontSize: 10,
                           minWidth: "auto",
-                          padding: "2px 6px",
+                          p: "2px 6px",
                           textTransform: "none",
-                          lineHeight: 1,
                         }}
                       >
                         Upload foto
@@ -172,18 +169,18 @@ const ProfilePlayground = () => {
                       </Button>
                     </Box>
 
-                    {/* RIGHT: Name + Status */}
+                    {/* Name + Status */}
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
-                      <Typography sx={{ fontWeight: 600 }}>
+                      <Typography sx={{ fontWeight: 600, fontSize: 13 }}>
                         {profileSettings.name} {profileSettings.surname}
                       </Typography>
 
                       <Typography
-                        variant="body2"
                         sx={{
                           display: "flex",
                           alignItems: "center",
                           gap: 0.5,
+                          fontSize: 12,
                           color: profileSettings.isOnline
                             ? "success.main"
                             : "text.secondary",
@@ -194,11 +191,16 @@ const ProfilePlayground = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  {/* Role */}
+
+                  {/* ROLE */}
                   <Button
                     variant="outlined"
                     size="small"
-                    sx={{ borderRadius: 5, alignSelf: "flex-start" }}
+                    sx={{
+                      borderRadius: 5,
+                      fontSize: 11,
+                      alignSelf: "flex-start",
+                    }}
                   >
                     {getRole()}
                   </Button>
@@ -209,50 +211,45 @@ const ProfilePlayground = () => {
                     variant="contained"
                     size="small"
                     color={profileSettings.buttonColor}
+                    sx={{ fontSize: 11 }}
                   >
                     MESSAGE
                   </Button>
 
-                  <Button sx={{ flex: 1 }} variant="outlined" size="small">
+                  <Button
+                    sx={{ flex: 1, fontSize: 11 }}
+                    variant="outlined"
+                    size="small"
+                  >
                     OFFER JOB
                   </Button>
                 </CardActions>
 
                 {profileSettings.showAlert && (
                   <Box sx={{ px: 2, pb: 2 }}>
-                    {/* MAIN ALERT */}
                     <Alert
                       severity="info"
+                      sx={{ mb: 1, fontSize: 12 }}
                       action={
-                        <Button
-                          color="inherit"
-                          size="small"
-                          onClick={() => alert("Thanks for reading!")}
-                        >
+                        <Button size="small" sx={{ fontSize: 10 }}>
                           Got it
                         </Button>
                       }
-                      sx={{
-                        mb: 1,
-                        animation: "pulse 2s infinite",
-                        "@keyframes pulse": {
-                          "0%,100%": { opacity: 1 },
-                          "50%": { opacity: 0.7 },
-                        },
-                      }}
                     >
                       Don't forget to upload your avatar!
                     </Alert>
 
-                    {/* 🔥 MULTI ALERT BLOCK */}
                     <Stack spacing={1}>
-                      <Alert severity="success">Great! MUI is working</Alert>
-
-                      <Alert severity="info">Try changing button colors</Alert>
-
-                      <Alert severity="warning">Don't forget about props</Alert>
-
-                      <Alert severity="error">
+                      <Alert severity="success" sx={{ fontSize: 12 }}>
+                        Great! MUI is working
+                      </Alert>
+                      <Alert severity="info" sx={{ fontSize: 12 }}>
+                        Try changing button colors
+                      </Alert>
+                      <Alert severity="warning" sx={{ fontSize: 12 }}>
+                        Don't forget about props
+                      </Alert>
+                      <Alert severity="error" sx={{ fontSize: 12 }}>
                         No errors, everything is fine!
                       </Alert>
                     </Stack>
@@ -265,56 +262,54 @@ const ProfilePlayground = () => {
           {/* RIGHT */}
           <Paper sx={{ flex: 1, p: 3 }}>
             <Stack spacing={2}>
-              {/* NAME */}
               <Box sx={{ display: "flex", gap: 2 }}>
                 <TextField
-                  label="Name"
+                  size="small"
+                  fullWidth
                   value={profileSettings.name}
                   onChange={(e) => update("name", e.target.value)}
-                  size="small"
-                  fullWidth
+                  InputProps={{ sx: { fontSize: FONT_SIZE } }}
                 />
                 <TextField
-                  label="Surname"
-                  value={profileSettings.surname}
-                  onChange={(e) => update("surname", e.target.value)}
                   size="small"
                   fullWidth
+                  value={profileSettings.surname}
+                  onChange={(e) => update("surname", e.target.value)}
+                  InputProps={{ sx: { fontSize: FONT_SIZE } }}
                 />
               </Box>
 
-              {/* SELECT */}
               <FormControl fullWidth size="small">
-                <InputLabel>Occupation</InputLabel>
                 <Select
                   value={profileSettings.occupation}
-                  label="Occupation"
                   onChange={(e) => update("occupation", e.target.value)}
+                  sx={{ fontSize: FONT_SIZE }}
                 >
                   {roles.map((r) => (
-                    <MenuItem key={r.value} value={r.value}>
+                    <MenuItem
+                      key={r.value}
+                      value={r.value}
+                      sx={{ fontSize: FONT_SIZE }}
+                    >
                       {r.label}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              {/* SLIDER */}
               <Box>
-                <Typography variant="body2">
+                <Typography sx={{ fontSize: FONT_SIZE }}>
                   Avatar size: {profileSettings.avatarSize}px
                 </Typography>
                 <Slider
+                  size="small"
                   value={profileSettings.avatarSize}
                   onChange={(_, v) => update("avatarSize", v)}
-                  min={40}
-                  max={120}
                 />
               </Box>
 
-              {/* COLOR */}
               <FormControl>
-                <FormLabel>Button Color</FormLabel>
+                <FormLabel sx={{ fontSize: FONT_SIZE }}>Button Color</FormLabel>
                 <RadioGroup
                   row
                   value={profileSettings.buttonColor}
@@ -325,36 +320,46 @@ const ProfilePlayground = () => {
                       key={c}
                       value={c}
                       control={<Radio size="small" />}
-                      label={c}
+                      label={
+                        <Typography sx={{ fontSize: FONT_SIZE }}>
+                          {c}
+                        </Typography>
+                      }
                     />
                   ))}
                 </RadioGroup>
               </FormControl>
 
-              {/* SWITCH */}
               <FormControlLabel
                 control={
                   <Switch
+                    size="small"
                     checked={profileSettings.isOnline}
                     onChange={(e) => update("isOnline", e.target.checked)}
                   />
                 }
-                label="Online status"
+                label={
+                  <Typography sx={{ fontSize: FONT_SIZE }}>Online</Typography>
+                }
               />
 
               <FormControlLabel
                 control={
                   <Checkbox
+                    size="small"
                     checked={profileSettings.showAlert}
                     onChange={(e) => update("showAlert", e.target.checked)}
                   />
                 }
-                label="Show alert"
+                label={
+                  <Typography sx={{ fontSize: FONT_SIZE }}>
+                    Show alert
+                  </Typography>
+                }
               />
 
-              {/* CARD STYLE */}
               <FormControl>
-                <FormLabel>Card Style</FormLabel>
+                <FormLabel sx={{ fontSize: FONT_SIZE }}>Card Style</FormLabel>
                 <RadioGroup
                   row
                   value={profileSettings.cardVariant}
@@ -363,12 +368,20 @@ const ProfilePlayground = () => {
                   <FormControlLabel
                     value="elevation"
                     control={<Radio size="small" />}
-                    label="Shadow"
+                    label={
+                      <Typography sx={{ fontSize: FONT_SIZE }}>
+                        Shadow
+                      </Typography>
+                    }
                   />
                   <FormControlLabel
                     value="outlined"
                     control={<Radio size="small" />}
-                    label="Border"
+                    label={
+                      <Typography sx={{ fontSize: FONT_SIZE }}>
+                        Border
+                      </Typography>
+                    }
                   />
                 </RadioGroup>
               </FormControl>
