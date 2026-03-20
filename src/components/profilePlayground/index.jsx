@@ -22,6 +22,7 @@ import {
   MenuItem,
   InputLabel,
   Paper,
+  Badge,
 } from "@mui/material";
 
 const roles = [
@@ -35,13 +36,14 @@ const ProfilePlayground = () => {
   const [profileSettings, setProfileSettings] = useState({
     name: "Anna",
     surname: "Petrova",
-    avatarSize: 60,
+    avatarSize: 42,
     buttonColor: "primary",
     buttonSize: "medium",
     isOnline: false,
-    showAlert: true,
+    showAlert: false,
     occupation: "developer",
     cardVariant: "elevation",
+    avatarUrl: null,
   });
 
   const update = (field, value) => {
@@ -59,6 +61,15 @@ const ProfilePlayground = () => {
   const getRole = () =>
     roles.find((r) => r.value === profileSettings.occupation)?.label;
 
+  // 📸 upload image
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    update("avatarUrl", url);
+  };
+
   return (
     <Box sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", p: 4 }}>
       <Box sx={{ maxWidth: 1200, mx: "auto" }}>
@@ -66,18 +77,17 @@ const ProfilePlayground = () => {
           {/* LEFT */}
           <Paper sx={{ flex: "0 0 40%", p: 3 }}>
             <Typography
-  variant="h6"
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    gap: 1,
-    mb: 2,
-    pl: "calc((100% - 300px) / 2)", // 🔥 ключ
-  }}
->
-  👤 Profile Card
-</Typography>
-              
+              variant="h6"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mb: 2,
+                pl: "calc((100% - 300px) / 2)",
+              }}
+            >
+              👤 Profile Card
+            </Typography>
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Card
@@ -85,51 +95,92 @@ const ProfilePlayground = () => {
                 elevation={profileSettings.cardVariant === "elevation" ? 3 : 0}
                 sx={{
                   width: 300,
-                  border:
-                    profileSettings.cardVariant === "outlined"
-                      ? "1px solid #e0e0e0"
-                      : "none",
                   transition: "0.3s",
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                    boxShadow: 8,
+                  },
                 }}
               >
                 <CardContent
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                  }}
+                  sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                 >
                   {/* HEADER */}
                   <Box sx={{ display: "flex", gap: 2 }}>
-                    <Avatar
-                      sx={{
-                        width: profileSettings.avatarSize,
-                        height: profileSettings.avatarSize,
-                        bgcolor: "primary.main",
-                        fontSize: profileSettings.avatarSize / 2.5,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {getInitials()}
-                    </Avatar>
-
-                    {/* NAME + STATUS */}
+                    {/* LEFT: Avatar + Upload */}
                     <Box
                       sx={{
                         display: "flex",
                         flexDirection: "column",
-                        alignItems: "flex-start",
+                        alignItems: "center",
+                        gap: 0.5,
                       }}
                     >
-                      <Typography sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent={
+                          profileSettings.isOnline ? (
+                            <Box
+                              sx={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                bgcolor: "success.main",
+                                border: "2px solid white",
+                              }}
+                            />
+                          ) : null
+                        }
+                      >
+                        <Avatar
+                          src={profileSettings.avatarUrl || undefined}
+                          sx={{
+                            width: profileSettings.avatarSize,
+                            height: profileSettings.avatarSize,
+                            bgcolor: "primary.main",
+                            fontSize: profileSettings.avatarSize / 2.5,
+                          }}
+                        >
+                          {!profileSettings.avatarUrl && getInitials()}
+                        </Avatar>
+                      </Badge>
+
+                      {/* Upload strictly under the avatar */}
+                      <Button
+                        variant="text"
+                        component="label"
+                        size="small"
+                        sx={{
+                          fontSize: "10px",
+                          minWidth: "auto",
+                          padding: "2px 6px",
+                          textTransform: "none",
+                          lineHeight: 1,
+                        }}
+                      >
+                        Upload foto
+                        <input
+                          hidden
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                      </Button>
+                    </Box>
+
+                    {/* RIGHT: Name + Status */}
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Typography sx={{ fontWeight: 600 }}>
                         {profileSettings.name} {profileSettings.surname}
                       </Typography>
 
                       <Typography
                         variant="body2"
                         sx={{
-                          lineHeight: 1.2,
-                          mt: 0.3,
                           display: "flex",
                           alignItems: "center",
                           gap: 0.5,
@@ -138,37 +189,22 @@ const ProfilePlayground = () => {
                             : "text.secondary",
                         }}
                       >
-                        <Box component="span">
-                          {profileSettings.isOnline ? "●" : "○"}
-                        </Box>
+                        {profileSettings.isOnline ? "●" : "○"}
                         {profileSettings.isOnline ? "Online" : "Offline"}
                       </Typography>
                     </Box>
                   </Box>
-
-                  {/* ROLE BUTTON */}
+                  {/* Role */}
                   <Button
                     variant="outlined"
                     size="small"
-                    sx={{
-                      alignSelf: "flex-start",
-                      borderRadius: 5,
-                      textTransform: "none",
-                    }}
+                    sx={{ borderRadius: 5, alignSelf: "flex-start" }}
                   >
                     {getRole()}
                   </Button>
                 </CardContent>
 
-                {/* ACTIONS */}
-                <CardActions
-                  sx={{
-                    px: 2,
-                    pb: 2,
-                    gap: 1,
-                    display: "flex",
-                  }}
-                >
+                <CardActions sx={{ px: 2, pb: 2, gap: 1 }}>
                   <Button
                     variant="contained"
                     size="small"
@@ -177,14 +213,34 @@ const ProfilePlayground = () => {
                     MESSAGE
                   </Button>
 
-                  <Button variant="outlined" size="small" sx={{ flex: 1 }}>
+                  <Button sx={{ flex: 1 }} variant="outlined" size="small">
                     OFFER JOB
                   </Button>
                 </CardActions>
 
                 {profileSettings.showAlert && (
                   <Box sx={{ px: 2, pb: 2 }}>
-                    <Alert severity="info">Looking for interns</Alert>
+                    <Alert
+                      severity="info"
+                      action={
+                        <Button
+                          color="inherit"
+                          size="small"
+                          onClick={() => alert("Thanks for reading!")}
+                        >
+                          Got it
+                        </Button>
+                      }
+                      sx={{
+                        animation: "pulse 2s infinite",
+                        "@keyframes pulse": {
+                          "0%,100%": { opacity: 1 },
+                          "50%": { opacity: 0.7 },
+                        },
+                      }}
+                    >
+                      Don't forget to upload your avatar!
+                    </Alert>
                   </Box>
                 )}
               </Card>
@@ -203,7 +259,6 @@ const ProfilePlayground = () => {
                   size="small"
                   fullWidth
                 />
-
                 <TextField
                   label="Surname"
                   value={profileSettings.surname}
@@ -214,7 +269,7 @@ const ProfilePlayground = () => {
               </Box>
 
               {/* SELECT */}
-              <FormControl size="small" fullWidth>
+              <FormControl fullWidth size="small">
                 <InputLabel>Occupation</InputLabel>
                 <Select
                   value={profileSettings.occupation}
@@ -231,12 +286,10 @@ const ProfilePlayground = () => {
 
               {/* SLIDER */}
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body2">
                   Avatar size: {profileSettings.avatarSize}px
                 </Typography>
-
                 <Slider
-                  size="small"
                   value={profileSettings.avatarSize}
                   onChange={(_, v) => update("avatarSize", v)}
                   min={40}
@@ -246,8 +299,7 @@ const ProfilePlayground = () => {
 
               {/* COLOR */}
               <FormControl>
-                <FormLabel sx={{ fontSize: 13 }}>Button Color</FormLabel>
-
+                <FormLabel>Button Color</FormLabel>
                 <RadioGroup
                   row
                   value={profileSettings.buttonColor}
@@ -264,31 +316,10 @@ const ProfilePlayground = () => {
                 </RadioGroup>
               </FormControl>
 
-              {/* SIZE */}
-              <FormControl>
-                <FormLabel sx={{ fontSize: 13 }}>Button Size</FormLabel>
-
-                <RadioGroup
-                  row
-                  value={profileSettings.buttonSize}
-                  onChange={(e) => update("buttonSize", e.target.value)}
-                >
-                  {["small", "medium", "large"].map((s) => (
-                    <FormControlLabel
-                      key={s}
-                      value={s}
-                      control={<Radio size="small" />}
-                      label={s}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-
               {/* SWITCH */}
               <FormControlLabel
                 control={
                   <Switch
-                    size="small"
                     checked={profileSettings.isOnline}
                     onChange={(e) => update("isOnline", e.target.checked)}
                   />
@@ -296,11 +327,9 @@ const ProfilePlayground = () => {
                 label="Online status"
               />
 
-              {/* ALERT */}
               <FormControlLabel
                 control={
                   <Checkbox
-                    size="small"
                     checked={profileSettings.showAlert}
                     onChange={(e) => update("showAlert", e.target.checked)}
                   />
@@ -308,9 +337,9 @@ const ProfilePlayground = () => {
                 label="Show alert"
               />
 
+              {/* CARD STYLE */}
               <FormControl>
-                <FormLabel sx={{ fontSize: 13 }}>Card Style</FormLabel>
-
+                <FormLabel>Card Style</FormLabel>
                 <RadioGroup
                   row
                   value={profileSettings.cardVariant}
@@ -319,13 +348,12 @@ const ProfilePlayground = () => {
                   <FormControlLabel
                     value="elevation"
                     control={<Radio size="small" />}
-                    label="Card with shadow"
+                    label="Shadow"
                   />
-
                   <FormControlLabel
                     value="outlined"
                     control={<Radio size="small" />}
-                    label="Card with border"
+                    label="Border"
                   />
                 </RadioGroup>
               </FormControl>
