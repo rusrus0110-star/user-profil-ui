@@ -220,6 +220,7 @@ const ProfilePlayground = () => {
 
                 {profileSettings.showAlert && (
                   <Box sx={{ px: 2, pb: 2 }}>
+                    {/* MAIN ALERT */}
                     <Alert
                       severity="info"
                       action={
@@ -232,6 +233,7 @@ const ProfilePlayground = () => {
                         </Button>
                       }
                       sx={{
+                        mb: 1,
                         animation: "pulse 2s infinite",
                         "@keyframes pulse": {
                           "0%,100%": { opacity: 1 },
@@ -241,6 +243,19 @@ const ProfilePlayground = () => {
                     >
                       Don't forget to upload your avatar!
                     </Alert>
+
+                    {/* 🔥 MULTI ALERT BLOCK */}
+                    <Stack spacing={1}>
+                      <Alert severity="success">Great! MUI is working</Alert>
+
+                      <Alert severity="info">Try changing button colors</Alert>
+
+                      <Alert severity="warning">Don't forget about props</Alert>
+
+                      <Alert severity="error">
+                        No errors, everything is fine!
+                      </Alert>
+                    </Stack>
                   </Box>
                 )}
               </Card>
